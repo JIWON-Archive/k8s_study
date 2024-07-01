@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dep-mysql
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      prod: mysql
+  template:
+    metadata:
+      labels:
+        prod: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:5.7
+        imagePullPolicy: IfNotPresent
+        envFrom:
+          - configMapRef:
+              name: dbname
+          - secretRef:
+              name: dbpass
+#        env:
+#        - name: MYSQL_ROOT_PASSWORD
+#          value: It12345!
+#        - name: MYSQL_DATABASE
+#          value: wordpress 
+        ports:
+        - containerPort: 3306 

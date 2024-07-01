@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dep-centos
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      prod: centos
+  template:
+    metadata:
+      labels:
+        prod: centos
+    spec:
+      containers:
+      - name: centos
+        image: centos:7
+        imagePullPolicy: IfNotPresent
+        command: [ "tail", "-F", "/home" ]
+        resources:
+          limits:
+            cpu: "1"
+            memory: "200Mi"
+          requests:
+            cpu: "500m" 
+            memory: "100Mi"

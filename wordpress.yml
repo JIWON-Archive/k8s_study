@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dep-word
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      prod: word
+  template:
+    metadata:
+      labels:
+        prod: word
+    spec:
+      containers:
+      - name: word
+        image: wordpress:5.6
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: "1"
+            memory: "300Mi"
+          requests:
+            cpu: "500m"
+            memory: "200Mi"
+        envFrom:
+          - configMapRef:
+              name: wordname
+          - secretRef:
+              name: wordpw
+        ports:
+        - containerPort: 80
+ 

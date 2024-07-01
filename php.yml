@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dep-php
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      prod: phpap
+  template:
+    metadata:
+      labels:
+        prod: phpap
+    spec:
+      containers:
+      - name: php-apache
+        image: infotecakihirodocker/apachephp74:latest
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: "0.5"
+            memory: "400Mi"
+          requests:
+            cpu: "300m"
+            memory: "200Mi"
+        envFrom:
+          - configMapRef:
+              name: wordname
+          - secretRef:
+              name: wordpw
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - mountPath: /var/www/html/
+            name: pv-php
+      volumes:
+      - name: pv-php
+        persistentVolumeClaim:
+          claimName: pvc-php
